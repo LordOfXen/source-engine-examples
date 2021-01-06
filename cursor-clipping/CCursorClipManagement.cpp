@@ -239,8 +239,6 @@ bool CCursorClipManagement::GetCurrentRECT(long &left, long &top, long &right, l
 	right = rect.right;
 	bottom = rect.bottom;
 
-	CUtlVector<CBasePlayer*> a;
-
 	return bRetval;
 }
 
