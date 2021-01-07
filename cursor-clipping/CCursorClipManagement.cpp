@@ -110,13 +110,13 @@ CCursorClipManagement::~CCursorClipManagement()
 // This can be called in FRAME_RENDER_END (OnRenderEnd, cdll_client_int.cpp).
 void CCursorClipManagement::Think()
 {
-	// Should we really stop this from working when tools and devmode is active?
 	// Checks that will always be static.
+	// Should we really stop this from working when tools and devmode is active?
 	if (m_bToolsMode || m_bDevMode)
 		return;
 
-	// Note: Maybe just enable this when the game is windowed.
 	// Checks that can dynamically be changed.
+	// Note: Maybe just enable this when the game is windowed.
 	if (!m_bEnabled || !enginevgui->IsGameUIVisible())
 	{
 		// Try unlocking the cursor if we've locked it before.
