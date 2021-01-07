@@ -111,10 +111,12 @@ CCursorClipManagement::~CCursorClipManagement()
 void CCursorClipManagement::Think()
 {
 	// Should we really stop this from working when tools and devmode is active?
+	// Checks that will always be static.
 	if (m_bToolsMode || m_bDevMode)
 		return;
 
 	// Note: Maybe just enable this when the game is windowed.
+	// Checks that can dynamically be changed.
 	if (!m_bEnabled || !enginevgui->IsGameUIVisible())
 	{
 		// Try unlocking the cursor if we've locked it before.
