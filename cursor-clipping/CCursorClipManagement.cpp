@@ -1,5 +1,5 @@
 //===============2021===============//
-//===		  Xen & DMDr	     ===//
+//===         Xen & DMDr         ===//
 //===============2021===============//
 
 #include "cbase.h"
@@ -97,6 +97,7 @@ CCursorClipManagement::CCursorClipManagement()
 	m_bLastMouseDownState = false;
 	m_bMouseDownStartedOutside = false;
 	m_flMouseDownStartedAt = 0;
+	m_iAction = CURSOR_CLIPMANAGEMENT_NONE;
 
 }
 
@@ -186,8 +187,8 @@ void CCursorClipManagement::Think()
 
 void CCursorClipManagement::LockCursor( bool mouseDown )
 {
-	// Do not allow if we've locked it already.
-	if (m_bLockState)
+	// Do not allow if we've locked it already, unless we got an action.
+	if (m_bLockState && m_iAction != CURSOR_CLIPMANAGEMENT_RELOCKREQUIRED)
 		return;
 
 	// Do not allow if the handle is not valid (i.e. we might be running on a different platform, something else than WIN32)
@@ -200,6 +201,10 @@ void CCursorClipManagement::LockCursor( bool mouseDown )
 		m_bLockState = ClipCursor(&rect);
 
 	m_bLockStateMouseDown = mouseDown && m_bLockState;
+
+	// Reset our action.
+	if (m_iAction == CURSOR_CLIPMANAGEMENT_RELOCKREQUIRED)
+		m_iAction = CURSOR_CLIPMANAGEMENT_NONE;
 }
 
 bool CCursorClipManagement::GetCurrentRECT(long &left, long &top, long &right, long &bottom, bool mouseDown)
@@ -242,6 +247,14 @@ bool CCursorClipManagement::GetCurrentRECT(long &left, long &top, long &right, l
 	return bRetval;
 }
 
+
+void CCursorClipManagement::SetLockAction(int iAction)
+{
+	if (iAction != m_iAction)
+		m_iAction = iAction;
+}
+
+
 void CCursorClipManagement::UnlockCursor( void )
 {
 	// Return if the cursor is already unlocked.
@@ -249,7 +262,7 @@ void CCursorClipManagement::UnlockCursor( void )
 		return;
 
 	m_bLockState = !((bool)ClipCursor(NULL));
-	m_bLockStateMouseDown = m_bLockState;
+	m_bLockStateMouseDown = false;
 }
 
 void CCursorClipManagement::Init(void)
